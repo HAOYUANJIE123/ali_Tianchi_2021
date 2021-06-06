@@ -1,0 +1,74 @@
+MODEL:
+  DEVICE: "cuda"
+  NAME: 'unet'
+  N_CHANNEL: 1
+  N_CLASS: False
+  LABEL_SMOOTH: False
+  DROPOUT: 0
+  RES_UNET:
+    BACKBONE: ''
+    PRETRAIN: ''
+    
+
+
+INPUT:
+  SIZE_TRAIN: [512, 512]
+  SIZE_TEST: [512, 512]
+  
+  PIXEL_MEAN: [0.5716390795822704,0.5191239166003989,0.4923358870147872]
+  PIXEL_STD: [0.24454287910934064,0.2379462921336855,0.22901043133634436]
+  NORMALIZATION: True
+  USE_MIX_UP: False
+  USE_AUGMIX: False
+  
+DATASETS:
+  NAMES: ('Base')
+  DATA_PATH: '/cache/common/icartoon_rec/iacrtoon_rec/pid_dataset/'
+  TRAIN:
+    IMAGE_FOLDER: 'train_rs_imgs'
+    GT_FOLDER: 'train_gray_gt_imgs'
+  VAL:
+    IMAGE_FOLDER: 'val_rs_imgs'
+    GT_FOLDER: 'val_gray_gt_imgs'
+
+DATALOADER:
+  NUM_WORKERS: 2
+
+SOLVER:
+  OPTIMIZER_NAME: "Adam"
+  SYNCBN: False
+
+  BASE_LR: 3e-4
+  MIN_LR: 3e-6
+  BIAS_LR_FACTOR: 1
+  USE_WARMUP: True
+
+  MOMENTUM: 0.9
+
+  WEIGHT_DECAY: 5e-4
+  WEIGHT_DECAY_BIAS: 5e-4
+
+  GAMMA: 0.1
+  STEPS: [30, 45]
+
+  WARMUP_FACTOR: 0.01 
+  WARMUP_EPOCH: 10
+  WARMUP_BEGAIN_LR: 3e-06
+  WARMUP_METHOD: "linear"
+
+  MAX_EPOCHS: 50
+  CHECKPOINT_PERIOD: 2
+  LOG_PERIOD: 100
+  EVAL_PERIOD: 2
+  START_SAVE_EPOCH: 40
+
+  IMS_PER_BATCH: 96
+  TENSORBOARD: 
+    USE: True
+    LOG_PERIOD: 20
+TEST:
+  WEIGHT: r'/usr/demo/common_data/seg_data/guanggu/output/unet_epoch118.pth'
+
+OUTPUT_DIR: "/cache/common/icartoon_rec/iacrtoon_rec/outputs/exp1-baseline256*128-resnet50_ibn_a-arcface-use_mish_conv-gem-random_erase-warmup10-epoch90"
+
+

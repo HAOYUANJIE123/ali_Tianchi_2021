@@ -1,0 +1,121 @@
+MODEL:
+  DEVICE: "cuda"
+  DEVICE_IDS: "'0'"
+  NAME: 'dlinknet'
+  N_CHANNEL: 3
+  N_CLASS: 2
+  LABEL_SMOOTH: False
+  DROPOUT: 0.0
+  # WEIGHT: '/cache/resnet50-19c8e357.pth'
+  WEIGHT: '/cache/resnet18-5c106cde.pth'
+  BC: True
+  THRESHOLD: 0.5
+  LOSS_TYPE: 'bce_dice'
+  # WEIGHT: '/cache/resnest50-528c19ca.pth'
+  # UNET:
+  #   ENCODE_DIM: 32
+  #   BILINEAR: True
+  #   SCSE: False
+  #   DBLOCK: False
+  #   ATTENTION_BLOCK: False
+  #   RRCNN_BLOCK: False
+  #   RRCNN_BLOCK_T: 2
+  # EFFICIENT_UNET:
+  #   BACKBONE_NAME: 'efficientnet-b2'
+  #   CONCAT_INPUT: True
+  #   ATTENTION_BLOCK: False
+  # DEEPLAB_V3_PLUS:
+  #   BACKBONE_NAME: 'xception'
+  #   AUX:  True
+  #   DILATED: True
+  DLINKNET:
+    BACKBONE_NAME: 'resnet18'
+    SCSE: True
+    MISH: True
+    SPP: True
+    GEM: False
+    INPLACE_ABN: False
+    ACF: False
+    SPHEAD: True
+
+
+INPUT:
+  SIZE_TRAIN: [1024, 1024]
+  SIZE_TEST: [1024, 1024]
+
+  PIXEL_MEAN: [0.35540336386467425,0.383968561837589,0.3592760263863359]
+  PIXEL_STD: [0.1368416254486153,0.1363384775173113,0.13798154077383737]
+  NORMALIZATION: True
+  USE_MIX_UP: False
+  USE_AUGMIX: False
+
+
+
+DATASETS:
+  NAMES: ('Base')
+  CLASS_NAMES: ['道路','其他']
+  DATA_PATH: '/cache/hw_rs/'
+  IMG_SUFFIX: '.png'
+  SEG_MAP_SUFFIX: '.png'
+  IMAGE_FOLDER: 'imgs'
+  GT_FOLDER: 'gts'
+
+DATALOADER:
+  NUM_WORKERS: 8
+
+SOLVER:
+  OPTIMIZER_NAME: "SGD"
+  SYNCBN: False
+
+  BASE_LR: 3e-4
+  MIN_LR: 1e-6
+  BIAS_LR_FACTOR: 1
+  USE_WARMUP: True
+
+  MOMENTUM: 0.9
+
+  WEIGHT_DECAY: 5e-4
+  WEIGHT_DECAY_BIAS: 5e-4
+
+  LR_SCHEDULER: 'cosine_annealing'
+  GAMMA: 0.1
+  STEPS: [20, 30, 50]
+
+  WARMUP_FACTOR: 0.01
+  WARMUP_EPOCH: 10
+  WARMUP_BEGAIN_LR: 3e-06
+  WARMUP_METHOD: "linear"
+
+  SWA: False
+  SWA_LR: 2e-3
+  SWA_START: 75
+
+  
+  MAX_EPOCHS: 300
+  CHECKPOINT_PERIOD: 1
+  LOG_PERIOD: 20
+  EVAL_PERIOD: 4
+  TRAIN_LOG: False
+  START_SAVE_EPOCH: 60
+  START_EVAL_EPOCH: 0
+#  START_SAVE_EPOCH: 0
+
+  PER_BATCH: 4
+  FP16: True
+  RESUME: False
+  RESUME_CHECKPOINT: r'/cache/epoch_60.pth'
+  TENSORBOARD:
+    USE: True
+    LOG_PERIOD: 20
+TEST:
+  WEIGHT: r'/usr/demo/hexin/new_dataset/unet_baseline_150/unet_epoch147.pth'
+  FLIP_AUG: False
+
+OUTPUT_DIR: "/cache/unet_baseline_60"
+
+#TEST:
+#  WEIGHT: r'/usr/demo/hexin/new_dataset/unet_test/unet_epoch2.pth'
+#
+#OUTPUT_DIR: "/usr/demo/hexin/new_dataset/unet_test"
+
+

@@ -1,0 +1,74 @@
+MODEL:
+  DEVICE: "cuda"
+  DEVICE_IDS: "0d"
+  NAME: 'unet'
+  N_CHANNEL: 3
+  N_CLASS: 8
+  LABEL_SMOOTH: False
+  DROPOUT: 0.0
+  UNET:
+    ENCODE_DIM: 64
+    BILINEAR: True
+
+
+INPUT:
+  SIZE_TRAIN: [256, 256]
+  SIZE_TEST: [256, 256]
+  
+  PIXEL_MEAN: [0.5716390795822704,0.5191239166003989,0.4923358870147872]
+  PIXEL_STD: [0.24454287910934064,0.2379462921336855,0.22901043133634436]
+  NORMALIZATION: True
+  USE_MIX_UP: False
+  USE_AUGMIX: False
+  
+DATASETS:
+  NAMES: ('Base')
+  DATA_PATH: 'E:/data/naic_rs/'
+  TRAIN:
+    IMAGE_FOLDER: 'imgs'
+    GT_FOLDER: 'gts'
+  VAL:
+    IMAGE_FOLDER: 'imgs'
+    GT_FOLDER: 'gts'
+
+DATALOADER:
+  NUM_WORKERS: 6
+
+SOLVER:
+  OPTIMIZER_NAME: "Adam"
+  SYNCBN: False
+
+  BASE_LR: 3e-4
+  MIN_LR: 3e-6
+  BIAS_LR_FACTOR: 1
+  USE_WARMUP: True
+
+  MOMENTUM: 0.9
+
+  WEIGHT_DECAY: 5e-4
+  WEIGHT_DECAY_BIAS: 5e-4
+
+  GAMMA: 0.1
+  STEPS: [30, 45]
+
+  WARMUP_FACTOR: 0.01 
+  WARMUP_EPOCH: 10
+  WARMUP_BEGAIN_LR: 3e-06
+  WARMUP_METHOD: "linear"
+
+  MAX_EPOCHS: 60
+  CHECKPOINT_PERIOD: 1
+  LOG_PERIOD: 20
+  EVAL_PERIOD: 1
+  START_SAVE_EPOCH: 50
+
+  PER_BATCH: 16
+  TENSORBOARD: 
+    USE: True
+    LOG_PERIOD: 20
+TEST:
+  WEIGHT: r'/usr/demo/common_data/seg_data/guanggu/output/unet_epoch118.pth'
+
+OUTPUT_DIR: "E:/data/naic_rs/output/unet_baseline_60"
+
+

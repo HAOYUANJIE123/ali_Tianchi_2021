@@ -1,0 +1,128 @@
+MODEL:
+  DEVICE: "cuda"
+  DEVICE_IDS: "'1'"
+  NAME: 'res_unet'
+  N_CHANNEL: 3
+  N_CLASS: 13
+  LABEL_SMOOTH: False
+  DROPOUT: 0.0
+
+#  WEIGHT: r'/media/dell/E2DE40E3DE40B219/resnet34_ibn_a-94bc1577.pth'
+  WEIGHT: r'/media/dell/E2DE40E3DE40B219/resnet101_ibn_a-59ea0ac6.pth'
+
+  LOSS_TYPE: 'large_margin'
+
+  CLASS_WEIGHT: None
+
+  RES_UNET:
+    BACKBONE_NAME: 'resnet101_ibn_a'
+    SCSE: False
+    MISH: False
+    DB_BLOCK: False
+    HYPERCOLUMN: False
+
+
+
+INPUT:
+  SIZE_TRAIN: [112, 112]
+  SIZE_TEST: [112, 112]
+
+
+  PIXEL_MEAN: [0.485, 0.456, 0.406]
+  PIXEL_STD: [0.229, 0.224, 0.225]
+  NORMALIZATION: True
+  USE_MIX_UP: False
+  USE_CUT_MIX: False
+  USE_COPY_PASTE: False
+
+  USE_RESIZE: False
+  USE_VFLIP: False
+  USE_HFLIP: True
+  USE_RANDOMROTATE90: True
+  USE_SHIFTSCALEROTATE: True
+  USE_HUESATURATIONVALUE: False
+  USE_RGBSHIFT: True
+  USE_RANDOMBRIGHTNESSCONTRAST: False
+  USE_CLAHE: False
+  USE_RANDOMGAMMA: False
+  USE_GRIDMASK: False
+  USE_BLUR: False
+  USE_GAUSSNOISE: False
+  USE_ELASTICTRANSFORM: False
+  USE_CUTOUT: False
+
+DATASETS:
+  NAMES: ('Base')
+  CLASS_NAMES: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+  DATA_PATH: r'/home/dell/proj/hx/datasets/wc/new_dataset14/wc_dataset/'
+#  DATA_PATH: '/home/xieyi/SSD/xieyi/Detetection/seg/tc_data/split_dataset'
+  IMG_SUFFIX: '.tif'
+  SEG_MAP_SUFFIX: '.tif'
+  REDUCE_ZERO_LABEL: True
+  TRAIN_IMAGE_FOLDER: 'imgs/train'
+  TRAIN_GT_FOLDER: 'gts/train'
+  VAL_IMAGE_FOLDER: 'imgs/val'
+  VAL_GT_FOLDER: 'gts/val'
+
+DATALOADER:
+  NUM_WORKERS: 0
+
+SOLVER:
+  OPTIMIZER_NAME: "SGD"
+  MOMENTUM: 0.9
+  WEIGHT_DECAY: 5e-4
+  WEIGHT_DECAY_BIAS: 5e-4
+
+
+  SYNCBN: False
+
+  MULTI_SCALE: []
+
+  BASE_LR: 1e-2
+  MIN_LR: 1e-4
+  BIAS_LR_FACTOR: 1
+
+
+  LR_SCHEDULER: 'cosine_annealing'
+  GAMMA: 0.1
+  STEPS: [5, 10]
+  T_MAX: 5
+  MILESTONES: [1]
+
+  USE_WARMUP: False
+  WARMUP_FACTOR: 0.01
+  WARMUP_EPOCH: 10
+  WARMUP_BEGAIN_LR: 5e-05
+  WARMUP_METHOD: "linear"
+
+  SWA: True
+
+
+  MAX_EPOCHS: 24
+  CHECKPOINT_PERIOD: 10
+  LOG_PERIOD: 100
+  EVAL_PERIOD: 20
+  TRAIN_LOG: False
+  START_SAVE_EPOCH: 0
+  START_EVAL_EPOCH: 0
+
+  PER_BATCH: 16
+  FP16: True
+  RESUME: True
+  RESUME_CHECKPOINT: r'/media/dell/E2DE40E3DE40B219/res_unet_ibn101/res_unet_epoch160.pth'
+  TENSORBOARD:
+    USE: True
+    LOG_PERIOD: 20
+TEST:
+  WEIGHT: r'/media/dell/E2DE40E3DE40B219/res_unet_ibn101/res_unet_epoch160.pth'
+  IMAGE_FOLDER: r'/media/dell/E2DE40E3DE40B219/test_samples/largeimg/clip_temp0'
+  FLIP_AUG: True
+
+OUTPUT_DIR: r"/media/dell/E2DE40E3DE40B219/res_unet_ibn101"
+
+#TEST:
+#  WEIGHT: r'/usr/demo/hexin/new_dataset/unet_test/unet_epoch2.pth'
+#
+#OUTPUT_DIR: "/usr/demo/hexin/new_dataset/unet_test"
+
+
